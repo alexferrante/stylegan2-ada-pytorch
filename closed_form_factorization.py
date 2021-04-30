@@ -4,6 +4,8 @@ import dnnlib
 import legacy
 import pickle
 
+import numpy as np
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Extract factor/eigenvectors of latent spaces using closed form factorization"
@@ -29,6 +31,10 @@ if __name__ == "__main__":
         weight_mat.append(v)
 
     W = torch.cat(weight_mat, 0)
-    eigvec = torch.svd(W).V.to("cpu")
+    svds = torch.svd(W).V.to("cpu")
 
-    torch.save({"ckpt": args.ckpt, "eigvec": eigvec}, args.out)
+    weight = W.cpu().clone().numpy()
+    weight = weight / np.linalg.norm(weight, axis=0, keepdims=True)
+    eigvals, eigvecs = np.linalg.eig(weight.dot(weight.T))
+
+    torch.save({"ckpt": args.ckpt, "eigvec": eigvecs, "eigval": eigvals, "svds": svds}, args.out)
