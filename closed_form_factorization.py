@@ -31,10 +31,10 @@ if __name__ == "__main__":
         weight_mat.append(v)
 
     W = torch.cat(weight_mat, 0)
-    svds = torch.svd(W).V.to("cpu")
+    svds = torch.linalg.svd(W).V.to("cpu")
 
     weight = W.cpu().clone().numpy()
     weight = weight / np.linalg.norm(weight, axis=0, keepdims=True)
     eigvals, eigvecs = np.linalg.eig(weight.dot(weight.T))
 
-    torch.save({"ckpt": args.ckpt, "eigvec": eigvecs, "eigval": eigvals, "svds": svds}, args.out)
+    torch.save({"ckpt": args.ckpt, "eigvec": eigvecs.T, "eigval": eigvals, "svds": svds}, args.out)
