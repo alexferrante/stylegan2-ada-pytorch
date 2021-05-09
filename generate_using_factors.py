@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, default="/cff_output/", help="directory for result samples",)
     parser.add_argument("--ckpt", type=str, required=True, help="stylegan2-ada-pytorch checkpoints")
     parser.add_argument("--truncation", type=float, default=1, help="truncation factor")
-    parser.add_argument("--mode", type="str", default="svd", choices=["svd", "eigvec"], help="source of latent vectors")
+    parser.add_argument("--mode", type=str, default="svd", choices=["svd", "eigvec"], help="source of latent vectors")
     parser.add_argument("factor", type=str, help="name of the closed form factorization result factor file")
 
     args = parser.parse_args()
