@@ -69,9 +69,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     device = torch.device('cuda')
-    if mode == 'svds':
+    if args.mode == 'svds':
         vec = torch.load(args.factor)[args.mode].to(device)
-    elif mode == 'eigvec':
+    elif args.mode == 'eigvec':
         vec_np = torch.load(args.factor)[args.mode]
         vec = torch.from_numpy(vec_np).to(device)
     index = args.index
