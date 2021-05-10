@@ -5,6 +5,7 @@ import legacy
 import pickle
 
 import numpy as np
+from sklearn.decomposition import TruncatedSVD
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -34,6 +35,19 @@ if __name__ == "__main__":
     svds = torch.linalg.svd(W).V.to("cpu")
 
     weight = W.cpu().clone().numpy()
+
+    # Check the explained variance of SVD and PCA decompositions of the weight space
+    # svd = TruncatedSVD(n_components=500, random_state=0)
+    # res = svd.fit_transform(weight)
+    # V = svd.components_
+    # S = svd.singular_values_ 
+    # print(svd.explained_variance_ratio_)
+
+    # pca = IncrementalPCA(n_components=500, batch_size=1000)
+    # res = pca.fit_transform(weight)
+    # print(pca.explained_variance_ratio_)
+
+
     weight = weight / np.linalg.norm(weight, axis=0, keepdims=True)
     eigvals, eigvecs = np.linalg.eig(weight.dot(weight.T))
 
