@@ -34,7 +34,7 @@ if __name__ == "__main__":
     W = torch.cat(weight_mat, 0)
     svds = torch.linalg.svd(W).V.to("cpu")
 
-    weight = W.cpu().clone().numpy()
+    # weight = W.cpu().clone().numpy()
 
     # Check the explained variance of SVD and PCA decompositions of the weight space
     # svd = TruncatedSVD(n_components=500, random_state=0)
@@ -47,8 +47,13 @@ if __name__ == "__main__":
     # res = pca.fit_transform(weight)
     # print(pca.explained_variance_ratio_)
 
+    alt_weight_mat = []
+    for k, v in modulate.items():
+        w = v.cpu().detach().numpy()
+        alt_weight_mat.append(w.T)
 
-    weight = weight / np.linalg.norm(weight, axis=0, keepdims=True)
-    eigvals, eigvecs = np.linalg.eig(weight.dot(weight.T))
+    alt_W = np.concatenate(alt_weight_mat, axis=1).astype(np.float32)
+    alt_W = alt_W / np.linalg.norm(alt_W, axis=0, keepdims=True)
+    eigvals, eigvecs = np.linalg.eig(alt_W.dot(alt_W.T))
 
     torch.save({"ckpt": args.ckpt, "eigvec": eigvecs.T, "eigval": eigvals, "svds": svds}, args.out)
